@@ -1,3 +1,9 @@
+import Vue from 'vue'; // Webpack knows it's in the node modules directory
 import './style.scss';
 
-console.log('Hello World');
+new Vue({
+    el: '#app',
+    data: {
+        msg: "Hello World"
+    }
+});
