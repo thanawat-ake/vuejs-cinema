@@ -1,36 +1,45 @@
 <template>
     <div id="movie-list">
-        <div v-for="movie in filteredMovies" class="movie">{{ movie.title }}</div>
+        <div v-if="filteredMovies.length">
+            <movie-item v-for="movie in filteredMovies" v-bind:movie="movie.movie"></movie-item>
+        </div>
+        <div v-else-if="movies.length" class="no-results">
+            No results.
+        </div>
+        <div v-else class="no-results">
+            Loading..
+        </div>
     </div>
 </template>
 <script>
     import genres from '../util/genres';
+    import MovieItem from './MovieItem.vue';
 
     export default {
-        data() {
-            return {
-                movies: [ //movie items (dummy data)
-                    { title: 'Kill Bill', genre: genres.CRIME},
-                    { title: 'Home Alone', genre: genres.COMEDY},
-                    { title: 'Austin Powers 2', genre: genres.COMEDY}
-                ]
-            }
-        },
-        props: [ 'genre', 'time' ],
+        props: [ 'genre', 'time', 'movies' ],
         methods: {
             moviePassesGenreFilter(movie){
-                // console.log("genre:"+genre);
-                if(!this.genre.length){ // length is zero
+                if(!this.genre.length){ // length is zero or no any genre selected
                     return true;
                 }else{
-                    return this.genre.find(genre => movie.genre === genre);
+                    let movieGenres = movie.movie.Genre.split(", "); //Animation, Comedy, Fantasy
+                    let matched = true;
+                    this.genre.forEach(genre => {
+                        if (movieGenres.indexOf(genre) === -1) { //indexOf it returns -1 if it's not there otherwise it returns its position.
+                            matched = false;
+                        }
+                    });
+                    return matched;
                 }
             }
         },
         computed: {
             filteredMovies(){
-                return this.movies.filter(this.moviePassesGenreFilter); //find that genre in each movies
+                return this.movies.filter(this.moviePassesGenreFilter); //find that genre in all movies
             }
+        },
+        components: {
+            MovieItem
         }
     }
 </script>
