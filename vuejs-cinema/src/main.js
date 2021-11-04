@@ -5,15 +5,20 @@ import MovieList from './components/MovieList.vue';
 import MovieFilter from './components/MovieFilter.vue';
 
 import VueResource from 'vue-resource';
-import response from "vue-resource/src/http/response";
 Vue.use(VueResource); // use API method
+
+import moment from 'moment-timezone';
+moment.tz.setDefault("UTC");
+Object.defineProperty(Vue.prototype, '$moment', { get() { return this.$root.moment } }); //data property of the root instance
 
 new Vue({ // Vue instance
     el: '#app',
     data: {
       genre: [],
       time: [],
-      movies: []
+      movies: [],
+      moment,
+      day: moment()
     },
     methods: {
         checkFilter(category, title, checked){
