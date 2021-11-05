@@ -11,26 +11,18 @@ import moment from 'moment-timezone';
 moment.tz.setDefault("UTC");
 Object.defineProperty(Vue.prototype, '$moment', { get() { return this.$root.moment } }); //data property of the root instance
 
+import { checkFilter } from "./util/bus"; //check filter is a variable in the scope of this whole file.
+const bus = new Vue();
+Object.defineProperty(Vue.prototype, '$bus', { get() { return this.$root.bus } });
 new Vue({ // Vue instance
     el: '#app',
-    data: {
+    data: { //data properties
       genre: [],
       time: [],
       movies: [],
       moment,
-      day: moment()
-    },
-    methods: {
-        checkFilter(category, title, checked){
-            if(checked){
-                this[category].push(title);
-            }else{
-                let index = this[category].indexOf(title);
-                if(index > -1){
-                    this[category].splice(index, 1); //cut 1 item at position index.
-                }
-            }
-        }
+      day: moment(),
+      bus //any component can access that bus
     },
     components: { // register 2 custom components
         MovieList,
@@ -40,5 +32,6 @@ new Vue({ // Vue instance
         this.$http.get('/api').then(response => {
            this.movies = response.data;
         });
+        this.$bus.$on('check-filter', checkFilter.bind(this)); //it's no longer this. it's just check filter because the this has access to that scope.
     }
 });
