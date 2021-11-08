@@ -1,9 +1,6 @@
 import Vue from 'vue'; // Webpack knows it's in the node modules directory
 import './style.scss';
 
-import MovieList from './components/MovieList.vue';
-import MovieFilter from './components/MovieFilter.vue';
-
 import VueResource from 'vue-resource';
 Vue.use(VueResource); // use API method
 
@@ -14,6 +11,13 @@ Object.defineProperty(Vue.prototype, '$moment', { get() { return this.$root.mome
 import { checkFilter } from "./util/bus"; //check filter is a variable in the scope of this whole file.
 const bus = new Vue();
 Object.defineProperty(Vue.prototype, '$bus', { get() { return this.$root.bus } });
+
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
+import routes from './util/routes';
+const router = new VueRouter({ routes }); //creating an instance of the Vuerouter
+
 new Vue({ // Vue instance
     el: '#app',
     data: { //data properties
@@ -24,14 +28,11 @@ new Vue({ // Vue instance
       day: moment(),
       bus //any component can access that bus
     },
-    components: { // register 2 custom components
-        MovieList,
-        MovieFilter
-    },
     created() {
         this.$http.get('/api').then(response => {
            this.movies = response.data;
         });
         this.$bus.$on('check-filter', checkFilter.bind(this)); //it's no longer this. it's just check filter because the this has access to that scope.
-    }
+    },
+    router //a property
 });
