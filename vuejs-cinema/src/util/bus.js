@@ -9,4 +9,8 @@ function checkFilter(category, title, checked){
     }
 }
 
-export { checkFilter }; //to make check filter a property of that object.
+function setDay(day) {
+    this.day = day;
+}
+
+export { checkFilter, setDay }; //to make check filter a property of that object.

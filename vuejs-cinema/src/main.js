@@ -8,7 +8,7 @@ import moment from 'moment-timezone';
 moment.tz.setDefault("UTC");
 Object.defineProperty(Vue.prototype, '$moment', { get() { return this.$root.moment } }); //data property of the root instance
 
-import { checkFilter } from "./util/bus"; //check filter is a variable in the scope of this whole file.
+import { checkFilter, setDay } from "./util/bus"; //check filter is a variable in the scope of this whole file.
 const bus = new Vue();
 Object.defineProperty(Vue.prototype, '$bus', { get() { return this.$root.bus } });
 
@@ -32,7 +32,8 @@ new Vue({ // Vue instance
         this.$http.get('/api').then(response => {
            this.movies = response.data;
         });
-        this.$bus.$on('check-filter', checkFilter.bind(this)); //it's no longer this. it's just check filter because the this has access to that scope.
+        this.$bus.$on('check-filter', checkFilter.bind(this)); // It's no longer this. it's just check filter because the this has access to that scope.
+        this.$bus.$on('set-day', setDay.bind(this)); // Root
     },
     router //a property
 });
