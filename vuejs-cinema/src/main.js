@@ -18,6 +18,9 @@ Vue.use(VueRouter);
 import routes from './util/routes';
 const router = new VueRouter({ routes }); //creating an instance of the Vuerouter
 
+import Tooltip from './util/tooltip';
+Vue.use(Tooltip);
+
 new Vue({ // Vue instance
     el: '#app',
     data: { //data properties
@@ -37,3 +40,4 @@ new Vue({ // Vue instance
     },
     router //a property
 });
+
